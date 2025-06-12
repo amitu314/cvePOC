@@ -1,5 +1,6 @@
 from pip._vendor import requests
 import time
+from pyExploitDb import PyExploitDb
 
 def cvePoc(cve):
     url = 'https://cveawg.mitre.org/api/cve/' + str(cve)
@@ -22,9 +23,19 @@ def cvePoc(cve):
         print(f"Error: {response.status_code}")
         return None
 
+def exploitDB(cve):
+    pEdb = PyExploitDb()
+    pEdb.debug = False
+    pEdb.openFile()
+    results = pEdb.searchCve(cve)
+    if results:          
+        print(f"Exploit exists for: {cve} | file {results['file']}")
+    else:
+        print(f"No exploits found for: {cve}")
 
 if __name__ == "__main__":
     alasCVE = ['CVE-2024-26914',	'CVE-2024-26948',	'CVE-2024-35794']   
     for cve in alasCVE:
-      cvePoc(cve)
-      time.sleep(1)
+        cvePoc(cve)
+        exploitDB(cve)
+        time.sleep(1)
